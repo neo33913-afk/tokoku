@@ -1,0 +1,1005 @@
+/* =========================================================
+   TOKOKU - Sistem desain (terang + gelap)
+   Warna utama bisa diganti cukup dengan mengubah --primary
+   dan --primary-rgb di bagian TOKEN di bawah.
+   ========================================================= */
+
+
+/* ---------- 1. TOKEN WARNA ---------- */
+
+:root,
+[data-bs-theme="light"] {
+    color-scheme: light;
+
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-rgb: 79, 70, 229;
+    --primary-soft: #eef0ff;
+    --on-primary: #ffffff;
+
+    --bg: #f5f6fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f9;
+    --input-bg: #ffffff;
+
+    --border: #e4e7f0;
+    --border-strong: #cfd4e3;
+
+    --text: #1b1f33;
+    --text-2: #3d4560;
+    --muted: #6a7188;
+
+    --nav-bg: rgba(255, 255, 255, 0.82);
+
+    --shadow-sm: 0 1px 2px rgba(20, 24, 50, 0.05), 0 4px 14px rgba(20, 24, 50, 0.04);
+    --shadow-md: 0 10px 32px rgba(20, 24, 50, 0.12);
+
+    --radius: 16px;
+
+    /* Penghubung ke variabel Bootstrap */
+    --bs-body-bg: var(--bg);
+    --bs-body-color: var(--text);
+    --bs-border-color: var(--border);
+    --bs-secondary-color: var(--muted);
+    --bs-link-color-rgb: 79, 70, 229;
+    --bs-link-hover-color-rgb: 67, 56, 202;
+}
+
+[data-bs-theme="dark"] {
+    color-scheme: dark;
+
+    --primary: #7c83ff;
+    --primary-hover: #959bff;
+    --primary-rgb: 124, 131, 255;
+    --primary-soft: rgba(124, 131, 255, 0.16);
+    --on-primary: #0e1022;
+
+    --bg: #0e1120;
+    --surface: #161a2e;
+    --surface-2: #1e2339;
+    --input-bg: #11142a;
+
+    --border: #272d47;
+    --border-strong: #353c5c;
+
+    --text: #e8eaf6;
+    --text-2: #c3c8e0;
+    --muted: #98a0bd;
+
+    --nav-bg: rgba(22, 26, 46, 0.82);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.18);
+    --shadow-md: 0 10px 32px rgba(0, 0, 0, 0.45);
+
+    --bs-body-bg: var(--bg);
+    --bs-body-color: var(--text);
+    --bs-border-color: var(--border);
+    --bs-secondary-color: var(--muted);
+    --bs-link-color-rgb: 138, 143, 255;
+    --bs-link-hover-color-rgb: 170, 175, 255;
+}
+
+
+/* ---------- 2. DASAR ---------- */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.015em;
+}
+
+::selection {
+    background: rgba(var(--primary-rgb), 0.25);
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.page-header h3 {
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-weight: 700;
+}
+
+
+/* ---------- 3. LAYOUT: SIDEBAR & TOPBAR ---------- */
+
+:root {
+    --sb-w: 72px;          /* lebar sidebar saat menyempit (hanya ikon) */
+    --sb-w-open: 264px;    /* lebar sidebar saat melebar */
+    --topbar-h: 64px;
+}
+
+/* Logo (dipakai di sidebar dan halaman login) */
+.navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-right: 0;
+    color: var(--text);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.navbar-brand:hover {
+    color: var(--text);
+}
+
+.brand-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-right: 0;
+    border-radius: 11px;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.35);
+}
+
+/* --- Sidebar --- */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+    width: var(--sb-w);
+    padding: 0.9rem 0.75rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    scrollbar-width: none;
+    transition: width 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Melebar otomatis saat disorot mouse, atau tetap lebar jika disematkan */
+.sidebar:hover {
+    width: var(--sb-w-open);
+}
+
+html.sidebar-pinned .sidebar {
+    width: var(--sb-w-open);
+}
+
+/* Melebar juga saat dipakai lewat keyboard (Tab) */
+.sidebar:has(:focus-visible) {
+    width: var(--sb-w-open);
+}
+
+html:not(.sidebar-pinned) .sidebar:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar .label {
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+}
+
+.sidebar:hover .label,
+html.sidebar-pinned .sidebar .label {
+    opacity: 1;
+}
+
+.sidebar:has(:focus-visible) .label {
+    opacity: 1;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.25rem;
+    padding: 0.2rem 0.35rem;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+}
+
+.sidebar-brand:hover {
+    color: var(--text);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-link i {
+    flex-shrink: 0;
+    width: 1.5rem;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.sidebar-link:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.sidebar-link.active {
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+button.sidebar-link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+}
+
+.sidebar-foot {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+/* Ikon dan teks tombol sematkan berganti sesuai status */
+.ikon-pin-on,
+.teks-pin-on {
+    display: none;
+}
+
+html.sidebar-pinned .ikon-pin-on,
+html.sidebar-pinned .teks-pin-on {
+    display: inline;
+}
+
+html.sidebar-pinned .ikon-pin-off,
+html.sidebar-pinned .teks-pin-off {
+    display: none;
+}
+
+/* --- Area isi --- */
+
+.app-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin-left: var(--sb-w);
+    transition: margin-left 0.22s ease;
+}
+
+html.sidebar-pinned .app-content {
+    margin-left: var(--sb-w-open);
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: var(--topbar-h);
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    backdrop-filter: saturate(180%) blur(12px);
+}
+
+.app-main {
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: 1360px;
+    margin-inline: auto;
+    padding: 1.25rem 1rem 2rem;
+}
+
+@media (min-width: 992px) {
+    .topbar {
+        padding: 0 2rem;
+    }
+
+    .app-main {
+        padding: 2rem 2rem 2.5rem;
+    }
+}
+
+/* --- Layar kecil: sidebar jadi laci yang muncul dari kiri --- */
+
+.sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        width: var(--sb-w-open);
+        transform: translateX(-100%);
+    }
+
+    body.sidebar-open .sidebar {
+        transform: none;
+        box-shadow: var(--shadow-md);
+    }
+
+    .sidebar .label {
+        opacity: 1;
+    }
+
+    .app-content,
+    html.sidebar-pinned .app-content {
+        margin-left: 0;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1035;
+        display: block;
+        background: rgba(8, 10, 25, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease;
+    }
+
+    body.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+}
+
+/* --- Tombol di topbar --- */
+
+.btn-ikon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text-2);
+    font-size: 1.05rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-ikon:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+/* Ikon matahari/bulan mengikuti tema aktif */
+.ikon-terang {
+    display: none;
+}
+
+[data-bs-theme="dark"] .ikon-terang {
+    display: inline;
+}
+
+[data-bs-theme="dark"] .ikon-gelap {
+    display: none;
+}
+
+.btn-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.65rem 0.25rem 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background-color 0.15s ease;
+}
+
+.btn-user:hover,
+.btn-user.show {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.badge-role {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* --- Kotak pencarian tabel (dibuat otomatis oleh cari.js) --- */
+
+.cari-wrap {
+    width: 100%;
+}
+
+.cari-box {
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .cari-wrap {
+        width: auto;
+    }
+
+    .cari-box {
+        width: 300px;
+    }
+}
+
+
+/* ---------- 4. KARTU ---------- */
+
+.card,
+.content-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    color: var(--text);
+}
+
+.card {
+    --bs-card-bg: var(--surface);
+    --bs-card-border-color: var(--border);
+}
+
+.content-card {
+    overflow: hidden;
+}
+
+.content-card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.content-card-header h5 {
+    font-size: 1rem;
+}
+
+.content-card-body {
+    padding: 1.25rem;
+}
+
+@media (max-width: 575.98px) {
+    .content-card-header {
+        padding: 0.85rem 1rem;
+    }
+
+    .content-card-body {
+        padding: 1rem;
+    }
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    margin-top: 0.35rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 1.15rem;
+}
+
+
+/* ---------- 5. TABEL ---------- */
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text);
+    --bs-table-border-color: var(--border);
+    --bs-table-hover-bg: var(--surface-2);
+    --bs-table-hover-color: var(--text);
+    --bs-table-striped-bg: var(--surface-2);
+
+    vertical-align: middle;
+    font-size: 0.88rem;
+}
+
+.table thead th {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.table td,
+.table th {
+    padding: 0.8rem 1rem;
+}
+
+@media (max-width: 575.98px) {
+    .table td,
+    .table th {
+        padding: 0.65rem 0.75rem;
+    }
+}
+
+
+/* ---------- 6. FORM ---------- */
+
+.form-label {
+    margin-bottom: 0.35rem;
+    color: var(--text-2);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    padding: 0.6rem 0.8rem;
+    border-color: var(--border-strong);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    color: var(--text);
+}
+
+.form-control-lg,
+.form-select-lg {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    background-color: var(--input-bg);
+    box-shadow: 0 0 0 0.22rem rgba(var(--primary-rgb), 0.2);
+    color: var(--text);
+}
+
+.form-control::placeholder {
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+.form-text {
+    color: var(--muted);
+}
+
+.input-group-text {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+    color: var(--muted);
+}
+
+.input-group > .form-control:not(:first-child),
+.input-group > .btn:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.input-group > .input-group-text:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.input-group > .btn:last-child,
+.input-group > .form-control:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+kbd {
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+
+/* ---------- 7. TOMBOL ---------- */
+
+.btn {
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.btn-sm {
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.btn-lg {
+    border-radius: 12px;
+}
+
+/* btn-dark dipakai di seluruh halaman sebagai tombol utama -> jadi warna utama */
+.btn-dark {
+    --bs-btn-color: var(--on-primary);
+    --bs-btn-bg: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-color: var(--on-primary);
+    --bs-btn-hover-bg: var(--primary-hover);
+    --bs-btn-hover-border-color: var(--primary-hover);
+    --bs-btn-active-color: var(--on-primary);
+    --bs-btn-active-bg: var(--primary-hover);
+    --bs-btn-active-border-color: var(--primary-hover);
+    --bs-btn-disabled-color: var(--on-primary);
+    --bs-btn-disabled-bg: var(--primary);
+    --bs-btn-disabled-border-color: var(--primary);
+    --bs-btn-focus-shadow-rgb: var(--primary-rgb);
+}
+
+.btn-outline-dark,
+.btn-outline-secondary {
+    --bs-btn-color: var(--text-2);
+    --bs-btn-border-color: var(--border-strong);
+    --bs-btn-hover-color: var(--text);
+    --bs-btn-hover-bg: var(--surface-2);
+    --bs-btn-hover-border-color: var(--border-strong);
+    --bs-btn-active-color: var(--text);
+    --bs-btn-active-bg: var(--surface-2);
+    --bs-btn-active-border-color: var(--border-strong);
+    --bs-btn-disabled-color: var(--muted);
+    --bs-btn-disabled-border-color: var(--border);
+    --bs-btn-focus-shadow-rgb: var(--primary-rgb);
+}
+
+.btn-light {
+    --bs-btn-color: var(--text);
+    --bs-btn-bg: var(--surface-2);
+    --bs-btn-border-color: var(--border);
+    --bs-btn-hover-color: var(--text);
+    --bs-btn-hover-bg: var(--border);
+    --bs-btn-hover-border-color: var(--border-strong);
+    --bs-btn-active-color: var(--text);
+    --bs-btn-active-bg: var(--border);
+    --bs-btn-active-border-color: var(--border-strong);
+}
+
+
+/* ---------- 8. DROPDOWN, MODAL, DAFTAR ---------- */
+
+.dropdown-menu {
+    --bs-dropdown-bg: var(--surface);
+    --bs-dropdown-color: var(--text);
+    --bs-dropdown-border-color: var(--border);
+    --bs-dropdown-link-color: var(--text);
+    --bs-dropdown-link-hover-bg: var(--surface-2);
+    --bs-dropdown-link-hover-color: var(--text);
+    --bs-dropdown-divider-bg: var(--border);
+
+    min-width: 220px;
+    padding: 0.5rem;
+    border-radius: 14px;
+    box-shadow: var(--shadow-md);
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.modal-content {
+    --bs-modal-bg: var(--surface);
+    --bs-modal-border-color: var(--border);
+    --bs-modal-header-border-color: var(--border);
+    --bs-modal-footer-border-color: var(--border);
+
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+}
+
+.list-group {
+    --bs-list-group-bg: var(--surface);
+    --bs-list-group-color: var(--text);
+    --bs-list-group-border-color: var(--border);
+    --bs-list-group-action-color: var(--text);
+    --bs-list-group-action-hover-bg: var(--surface-2);
+    --bs-list-group-action-hover-color: var(--text);
+    --bs-list-group-active-bg: var(--primary);
+    --bs-list-group-active-border-color: var(--primary);
+    --bs-list-group-active-color: var(--on-primary);
+}
+
+.alert {
+    border-radius: 12px;
+}
+
+
+/* ---------- 9. LENCANA & UTILITAS ---------- */
+
+.badge-soft {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Kelas bawaan Bootstrap yang dipakai di banyak halaman, disesuaikan ke tema */
+.text-secondary {
+    color: var(--muted) !important;
+}
+
+.bg-light {
+    background-color: var(--surface-2) !important;
+}
+
+.bg-white {
+    background-color: var(--surface) !important;
+}
+
+.text-bg-dark {
+    background-color: var(--primary) !important;
+    color: var(--on-primary) !important;
+}
+
+
+/* ---------- 10. FOOTER ---------- */
+
+.app-footer {
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+
+.app-footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    max-width: 1360px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+}
+
+@media (min-width: 576px) {
+    .app-footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 992px) {
+    .app-footer-inner {
+        padding-inline: 2rem;
+    }
+}
+
+
+/* ---------- 11. HALAMAN LOGIN & DAFTAR ---------- */
+
+.auth-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.auth-side {
+    display: none;
+    position: relative;
+    flex: 1 1 46%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    overflow: hidden;
+    background: linear-gradient(145deg, #4338ca 0%, #6d28d9 55%, #8b5cf6 100%);
+    color: #fff;
+}
+
+.auth-side::before,
+.auth-side::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}
+
+.auth-side::before {
+    top: -120px;
+    right: -120px;
+    width: 340px;
+    height: 340px;
+}
+
+.auth-side::after {
+    bottom: -140px;
+    left: -100px;
+    width: 380px;
+    height: 380px;
+}
+
+.auth-side > * {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-side .brand-icon {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+}
+
+.auth-side .navbar-brand {
+    color: #fff;
+}
+
+.auth-judul {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.auth-fitur {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.auth-fitur li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 0.9rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.auth-fitur i {
+    margin-top: 0.1rem;
+    font-size: 1.1rem;
+}
+
+.auth-main {
+    position: relative;
+    display: flex;
+    flex: 1 1 54%;
+    align-items: center;
+    justify-content: center;
+    padding: 4.5rem 1.25rem 2.5rem;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-box-lg {
+    max-width: 480px;
+}
+
+.auth-tema {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.auth-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+@media (min-width: 992px) {
+    .auth-wrap {
+        flex-direction: row;
+    }
+
+    .auth-side {
+        display: flex;
+    }
+
+    .auth-main {
+        padding: 2rem;
+    }
+}
+
+
+/* ---------- 12. KOMPATIBILITAS HALAMAN LAMA ----------
+   Beberapa halaman (mis. transaksi) masih punya <style> sendiri dengan
+   warna tetap. Aturan ini membuatnya tetap benar di dark mode sampai
+   halamannya ikut dirapikan.                                          */
+
+.produk-card {
+    border-color: var(--border) !important;
+    border-radius: 14px;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+.produk-card:hover:not(:disabled) {
+    border-color: var(--primary) !important;
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.15) !important;
+}
+
+
+/* ---------- 13. GERAKAN ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
